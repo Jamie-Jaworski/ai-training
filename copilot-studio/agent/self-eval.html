@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>self-eval.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>All 12 factors are covered. Here is the assessment.</p>
+<h1 id="ai-application-risk-assessment-internal-pilot">AI Application Risk Assessment (Internal Pilot)</h1>
+<h2 id="1-intake">1. Intake</h2>
+<ul>
+<li><strong>Owner:</strong> Jamie Jaworski</li>
+<li><strong>Business Unit:</strong> Cybersecurity</li>
+<li><strong>Use Case:</strong> A conversational assistant that conducts structured security risk assessments of proposed agentic AI applications, guiding the user through a fixed 12-factor interview and producing a weighted risk report for human review.</li>
+</ul>
+<h2 id="2-executive-summary">2. Executive Summary</h2>
+<ul>
+<li><strong>Overall Risk Level:</strong> <strong>Low</strong></li>
+<li><strong>Overall Weighted Score:</strong> <strong>2.34</strong> (32.7 ÷ 14.0)</li>
+<li><strong>Top Risk Drivers (highest weighted contribution):</strong>
+<ol>
+<li><strong>Guardrails &amp; Monitoring Maturity (6.0)</strong> — no guardrails, input filtering, or usage monitoring exist in the current version.</li>
+<li><strong>Data Sensitivity &amp; Privacy (4.2)</strong> — sensitive data is not <em>required</em>, but nothing technically prevents a user from pasting NPPI, credentials, or control-gap detail into the prompt.</li>
+<li><strong>Reliability &amp; Failure Modes (3.3)</strong> — no independent validation that scoring arithmetic is correct or that all 12 factors were actually evaluated.</li>
+<li><strong>Transparency &amp; Explainability (3.2)</strong> — sessions are ephemeral; a completed assessment cannot be reconstructed or audited after the fact.</li>
+<li><strong>Task Complexity &amp; Ambiguity (3.0)</strong> — scoring is inherently judgment-based, and open-ended follow-ups allow the conversation to drift off the fixed structure.</li>
+</ol>
+</li>
+</ul>
+<p>The risk profile is meaningfully suppressed by strong structural controls: no system connectivity, no tools, no autonomous action, mandatory human review, and secondary AI Committee review. Residual risk concentrates almost entirely in <strong>operational immaturity</strong> — the absence of guardrails, logging, and output validation — rather than in the application's inherent design.</p>
+<h2 id="3-12-factor-risk-evaluation">3. 12-Factor Risk Evaluation</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Factor</th>
+<th>Weight</th>
+<th>Score</th>
+<th>Weighted</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Autonomy &amp; Human Oversight</td>
+<td>1.5</td>
+<td>1</td>
+<td>1.50</td>
+<td>All output is human-reviewed and the app takes no autonomous actions of any kind.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Scope of Access &amp; Permissions</td>
+<td>1.4</td>
+<td>1</td>
+<td>1.40</td>
+<td>No connectivity to external systems or data; no read or write permissions anywhere.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Reversibility of Actions</td>
+<td>1.3</td>
+<td>2</td>
+<td>2.60</td>
+<td>Outputs are drafts subject to AI Committee review, though a flawed rating could anchor reviewer judgment before correction.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Task Complexity &amp; Ambiguity</td>
+<td>1.0</td>
+<td>3</td>
+<td>3.00</td>
+<td>The 12-step structure is fixed, but risk scoring is subjective and open-ended follow-ups permit conversational drift.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Tool &amp; Chain-of-Action Risk</td>
+<td>1.1</td>
+<td>1</td>
+<td>1.10</td>
+<td>Purely conversational text-in/text-out with no tools, file ingestion, or chained actions.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Data Sensitivity &amp; Privacy</td>
+<td>1.4</td>
+<td>3</td>
+<td>4.20</td>
+<td>Sensitive data is never required, but no technical control prevents entry of NPPI or internal control-gap detail into prompts.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Transparency &amp; Explainability</td>
+<td>0.8</td>
+<td>4</td>
+<td>3.20</td>
+<td>Sessions disappear on close, so assessments and their reasoning cannot currently be reconstructed or audited.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Reliability &amp; Failure Modes</td>
+<td>1.1</td>
+<td>3</td>
+<td>3.30</td>
+<td>The app re-prompts on incomplete input, but nothing validates score arithmetic, weight application, or factor coverage.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Scale &amp; Blast Radius</td>
+<td>1.3</td>
+<td>2</td>
+<td>2.60</td>
+<td>Currently a single user, expanding to one team — limited but growing exposure.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Guardrails &amp; Monitoring Maturity</td>
+<td>1.2</td>
+<td>5</td>
+<td>6.00</td>
+<td>No guardrails, prompt-injection protection, DLP, usage logging, or alerting exist today.</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Vendor &amp; Model Dependency</td>
+<td>0.8</td>
+<td>2</td>
+<td>1.60</td>
+<td>Runs on enterprise Copilot Studio and is model-agnostic, but model swaps can silently shift scoring behavior.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Regulatory &amp; Compliance Context</td>
+<td>1.1</td>
+<td>2</td>
+<td>2.20</td>
+<td>Strictly internal advisory today, though the subject matter is AI governance and could later become examiner-visible.</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Totals</strong></td>
+<td><strong>14.0</strong></td>
+<td></td>
+<td><strong>32.70</strong></td>
+<td><strong>Overall: 32.70 ÷ 14.0 = 2.34 — Low</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-recommended-mitigations">4. Recommended Mitigations</h2>
+<p><strong>Driver 1 — Guardrails &amp; Monitoring (Score 5, highest contributor)</strong></p>
+<ul>
+<li>Add a <strong>system-prompt protection layer</strong> resistant to override, extraction, and role-reassignment attempts; test with adversarial prompts before team rollout.</li>
+<li>Implement <strong>input filtering / DLP pattern matching</strong> for common sensitive-data formats (account-number patterns, SSN patterns, API keys, credential strings) with an inline block-and-warn.</li>
+<li>Enable <strong>Copilot Studio conversation and usage analytics</strong> at minimum, even before full transcript retention is built.</li>
+<li>Add a persistent <strong>on-screen data-handling notice</strong> at session start reinforcing the &quot;no PII/NPPI/credentials&quot; rule.</li>
+</ul>
+<p><strong>Driver 2 — Data Sensitivity &amp; Privacy (Score 3)</strong></p>
+<ul>
+<li>Confirm and <strong>document the Copilot Studio tenant's data-handling terms</strong>, including retention period and no-training-on-prompts commitments, for each model backend used.</li>
+<li>Define an explicit <strong>data classification ceiling</strong> for the app (e.g., &quot;Internal — no Confidential/Restricted&quot;) and state it in user guidance.</li>
+<li>Establish a <strong>spill-response procedure</strong>: if sensitive data is entered, who is notified and how the session data is purged.</li>
+</ul>
+<p><strong>Driver 3 — Reliability &amp; Failure Modes (Score 3)</strong></p>
+<ul>
+<li>Add a <strong>deterministic scoring check</strong> — recompute weighted totals outside the model (or via a validation step) rather than relying on LLM arithmetic.</li>
+<li>Enforce a <strong>completeness gate</strong>: the report cannot be produced unless all 12 factors have a recorded score and rationale.</li>
+<li>Run a <strong>consistency benchmark</strong>: submit 3–5 identical reference use cases across sessions and models, and measure score variance. Investigate any factor varying by more than ±1.</li>
+</ul>
+<p><strong>Driver 4 — Transparency &amp; Explainability (Score 4)</strong></p>
+<ul>
+<li>Prioritize the planned <strong>session resumption and output reconstruction</strong> feature; treat it as a prerequisite for any use beyond testing.</li>
+<li>Until then, require users to <strong>export and retain the full report</strong> to a controlled repository, recording model used, date, and app version.</li>
+<li>Add <strong>model and version stamping</strong> to every generated report so results are traceable to the configuration that produced them.</li>
+</ul>
+<p><strong>Driver 5 — Task Complexity &amp; Ambiguity (Score 3)</strong></p>
+<ul>
+<li>Publish <strong>anchored scoring definitions</strong> (concrete descriptors for what a 1 vs. 3 vs. 5 means on each factor) to reduce subjective drift.</li>
+<li>Constrain follow-up questions to a bounded set tied to specific factors.</li>
+<li>Require the AI Committee to treat scores as <strong>advisory input, not a determination</strong> — document this explicitly in the committee charter.</li>
+</ul>
+<p><strong>Cross-cutting — Vendor &amp; Model Dependency</strong></p>
+<ul>
+<li>Maintain an <strong>approved-model list</strong> for the app and require re-benchmarking whenever the backing model changes.</li>
+</ul>
+<h2 id="5-monitoring--operational-considerations">5. Monitoring &amp; Operational Considerations</h2>
+<p><strong>What should be logged</strong></p>
+<ul>
+<li>Full conversation transcript, timestamped, tied to authenticated user identity</li>
+<li>All 12 factor scores, weights applied, computed weighted total, and final risk level</li>
+<li>Model and version used, plus app/system-prompt version</li>
+<li>Any DLP or guardrail trigger events (attempted sensitive-data entry, prompt-injection attempts)</li>
+<li>Final report export events and destination</li>
+</ul>
+<p><strong>What should be monitored or alerted</strong></p>
+<ul>
+<li>Alerts on DLP pattern matches and system-prompt override attempts</li>
+<li>Anomalous usage volume or off-hours use once rolled out to the team</li>
+<li>Score distribution drift — a sudden shift toward low ratings may indicate model change or prompt degradation</li>
+<li>Incomplete or abandoned assessments that were nonetheless exported</li>
+<li>Divergence between app-generated ratings and final AI Committee determinations (a direct quality signal)</li>
+</ul>
+<p><strong>Expected ownership and review cadence</strong></p>
+<ul>
+<li><strong>Accountable owner:</strong> Jamie Jaworski (Cybersecurity)</li>
+<li><strong>Weekly during pilot:</strong> owner reviews all assessments generated, logging any factual errors, arithmetic errors, or skipped factors</li>
+<li><strong>Monthly:</strong> review app-vs-committee rating divergence and guardrail trigger events</li>
+<li><strong>Before each expansion of the user base:</strong> re-run this assessment, since Scale &amp; Blast Radius and Guardrails scores will both change</li>
+<li><strong>On any model change:</strong> re-benchmark against reference use cases before resuming production use</li>
+</ul>
+<h2 id="6-disposition-guidance-non-approval">6. Disposition Guidance (Non-Approval)</h2>
+<p><strong>Suitable for controlled pilot with guardrails.</strong></p>
+<p>The application's inherent risk is genuinely low — it has no system access, no tools, no autonomy, and two layers of human review. That structural containment is the dominant reason the overall score lands at <strong>2.34 (Low)</strong>.</p>
+<p>However, <strong>expansion beyond the Cybersecurity test group requires additional controls before it should proceed</strong>, specifically: (a) session retention and output reconstruction, (b) basic input guardrails and DLP, and (c) deterministic validation of scoring arithmetic and factor completeness. Absent transcript retention, the organization currently cannot demonstrate how any given risk rating was reached — an acceptable gap for a single-user pilot, but not for a tool whose output informs AI Committee decisions at scale.</p>
+<p>Note also a <strong>conflict-of-interest consideration</strong>: this assessment was produced by the tool being assessed, for its own owner. Recommend an independent reviewer outside Cybersecurity validate this assessment before it is presented to the AI Committee.</p>
+<hr>
+<p><strong>Assumptions documented</strong> (scored conservatively where information was unavailable):</p>
+<ul>
+<li>No formal user training or acceptable-use documentation currently exists for the app.</li>
+<li>Copilot Studio tenant data-retention terms were not confirmed during intake and are assumed to be standard enterprise terms, not verified.</li>
+<li>No adversarial/prompt-injection testing has been performed to date.</li>
+<li>Planned future capabilities (session resumption, guardrails) were <strong>not</strong> credited, per current-state-only scoring.</li>
+</ul>
+<p>If any of these assumptions are incorrect, let me know and I'll re-score the affected factors.</p>
+
+</body>
+</html>
